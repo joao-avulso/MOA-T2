@@ -7,9 +7,14 @@
 import sys, random
 from collections import deque
 
-x = 1
+#------------------------------------------------------------------------------------------------------
+
+inicial = 0
 if len(sys.argv) > 2:
-  x = int(sys.argv[2])
+  inicial = int(sys.argv[2])
+x = 1
+if len(sys.argv) > 3:
+  x = int(sys.argv[3])
 
 #------------------------------------------------------------------------------------------------------
 
@@ -41,7 +46,7 @@ def DFS_VISIT(g, u, tempo, visitados):
   g.vertices[u][5] = tempo
   return tempo
 
-def DFS(g):
+def DFS(g, v):
   for u in range(len(g.vertices)):
     g.vertices[u][1] = 'B'
     g.vertices[u][2] = None
@@ -50,9 +55,7 @@ def DFS(g):
     g.vertices[u][5] = None
   tempo = 0
   visitados = []
-  for v in range(len(g.vertices)):
-    if g.vertices[v][1] == 'B':
-      tempo = DFS_VISIT(g, v, tempo, visitados)
+  tempo = DFS_VISIT(g, v, tempo, visitados)
   return visitados
 
 #------------------------------------------------------------------------------------------------------
@@ -86,9 +89,12 @@ def mochileiro(arquivo):
 
   # calcular caminhos
   # roda DFS n*x vezes para combinaçoes aleatórias de vértices
+  global inicial
+  if inicial >= n:
+    inicial = n-1
   caminhos = []
   for i in range(n*x):
-    caminho = DFS(g)
+    caminho = DFS(g,inicial)
     dist = g.vertices[caminho[-1]][3]+g.c[(caminho[-1],caminho[0])]
     add = True
     for dado in caminhos:
